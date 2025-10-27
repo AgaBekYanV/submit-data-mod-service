@@ -8,10 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @AllArgsConstructor
@@ -22,11 +19,12 @@ public class MainController {
     private final UserService userService;
 
     @PostMapping("/{id}/new-message")
-    public ResponseEntity<UserMessage> createMessage(@RequestBody UserMessage userMessage, @PathVariable Long id) {
-        log.info("Called methode createMessage for message with id :", userMessage.getId());
+    public ResponseEntity<UserMessage> createMessage(@PathVariable Long id, @RequestBody UserMessage message) {
+        log.info("Called methode createMessage for message with id :", id);
+        log.info("Called methode createMessage with message:", message.getUserMessage());
         try {
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(userService.createUserMessage(userMessage, id));
+                    .body(userService.createUserMessage(message, id));
         } catch (IllegalArgumentException e){
             return ResponseEntity.status(404).build();
         }

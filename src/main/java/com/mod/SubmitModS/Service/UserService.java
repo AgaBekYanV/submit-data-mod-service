@@ -10,15 +10,15 @@ import com.mod.SubmitModS.Repository.UserMessageRepository;
 import com.mod.SubmitModS.Repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserMessageRepository userMessageRepository;
@@ -26,14 +26,12 @@ public class UserService {
     private final UserMapper userMapper;
     private final UserMessageMapper userMessageMapper;
 
-
+    @Transactional
     public UserMessage createUserMessage(UserMessage userMessageToCreate, Long id) {
         if(userMessageToCreate == null){
             return null;
         }
         UserEntity userEntity = userRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("User with id " + id + " not found"));
-
-
         UserMessageEntity userMessageEntity = new UserMessageEntity();
         userMessageEntity.setId(userMessageToCreate.getId());
         userMessageEntity.setUserMessage(userMessageToCreate.getUserMessage());
@@ -42,10 +40,12 @@ public class UserService {
         userEntity.addMessage(userMessageEntity);
 
         userMessageRepository.save(userMessageEntity);
+        userRepository.save(userEntity);
 
-        return userMessageToCreate;
+        return userMessageMapper.toModel(userMessageEntity);
     }
 
+    @Transactional
     public User createUser(User user) {
         if(user == null){return null;}
         if (userRepository.findByUsername(user.getUsername()).isPresent()){
@@ -54,11 +54,7 @@ public class UserService {
         UserEntity userEntity = new UserEntity();
 
         if(user.getUserMessages() == null || user.getUserMessages().isEmpty()){userEntity.setUserMessages(null);}
-        else{
-            //List<UserMessage> temp = user.getUserMessages();
-            //userMessageMapper.toEntity(temp);
-            //userEntity.setUserMessagesEntity(userMessageMapper.toEntity(new ArrayList<>()));
-        }
+
         userEntity.setUserMessages(null);
 
         userEntity.setId(null);

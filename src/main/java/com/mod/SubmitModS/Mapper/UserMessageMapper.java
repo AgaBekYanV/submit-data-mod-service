@@ -5,8 +5,6 @@ import com.mod.SubmitModS.Model.UserMessageEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -31,18 +29,5 @@ public class UserMessageMapper {
         return userMessageEntity;
     }
 
-    /*
-    public List<UserMessageEntity> toEntity(List<UserMessage> userMessages){
-        if(userMessages == null){return null;}
-        List<UserMessageEntity> userMessageEntities = new ArrayList<>();
-        for(UserMessage userMessage : userMessages){
-            userMessageEntities = this.toEntity(userMessage);
-        }
-        UserMessageEntity userMessageEntity = new UserMessageEntity();
-        userMessageEntity.setId(userMessage.getId());
-        userMessageEntity.setUserMessage(userMessage.getUserMessage());
-        userMessageEntity.setCreatedAt(userMessage.getCreatedAt());
-        return userMessageEntity;
-    }
-    */
+
 }
