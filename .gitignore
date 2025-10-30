@@ -36,3 +36,4 @@ build/
 ##Other##
 .git
 .git/
+docker/SubmitModS-0.0.1.jar
